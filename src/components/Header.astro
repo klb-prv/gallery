@@ -21,8 +21,8 @@ import { Icon } from 'astro-icon'
     <script>
         const r = document.referrer;
         let res = "";
-        if((r == String("https://beta.klubuntu.eu.org/")) && (r == String("https://kbaraniak.vercel.app/"))){
-            res = "Back to Portfolio"
+        if (r === 'https://beta.klubuntu.eu.org/' || r === 'https://me.vercel.app/') {
+            res = 'Back to Portfolio';
         }
         else{
             res = "Back to Previous Site"
