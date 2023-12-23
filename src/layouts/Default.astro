@@ -1,0 +1,115 @@
+---
+interface Props {
+	title_page: string;
+}
+const { title_page } = Astro.props;
+---
+
+<!doctype html>
+<html>
+<head>
+    <title>MyGallery - {title_page}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=roboto:300,700&display=swap" rel="stylesheet" />
+    <style is:global>
+
+        .circles {
+            width: 100%;
+            height: 100vh;
+            filter: blur(8rem);
+            z-index: -1;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            margin-left: -50%;
+            overflow: hidden;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+        }
+            
+        .circle {
+            position: absolute;
+            border-radius: 100%;
+            animation-iteration-count: infinite;
+            animation-timing-function: cubic-bezier(.1,0,.9,1);
+            opacity: 0.9;
+            z-index: -2;
+        }
+            
+        .c1 {
+            width: 32rem;
+            height: 32rem;
+            left: 50%;
+            top: 30vh;
+            animation-duration: 16s;
+            animation-name: c1;
+        }
+
+        .c2 {
+            width: 40rem;
+            height: 40rem;
+            left: 100%;
+            top: 0%;
+            animation-duration: 16s;
+            animation-name: c2;
+        }
+            
+        .c3 {
+            width: 36rem;
+            height: 36rem;
+            left: 10%;
+            top: 10%;
+            animation-duration: 16s;
+            animation-name: c3;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .c1, .c2, .c3, .circle {
+                animation: none!important;
+            }
+        }
+        @keyframes c1 {
+            0% { transform:translateY(-50%) translateX(-50%) rotate(-20deg) translateX(20%)}
+            25% { transform:translateY(-50%) translateX(-50%) skew(-15deg,-15deg) rotate(80deg) translateX(30%)}
+            50% { transform:translateY(-50%) translateX(-50%) rotate(180deg) translateX(25%)}
+            75% { transform:translateY(-50%) translateX(-50%) skew(15deg,15deg) rotate(240deg) translateX(15%)}
+            to { transform:translateY(-50%) translateX(-50%) rotate(340deg) translateX(20%)}
+        }
+
+        @keyframes c2 {
+            0% { transform:translateY(-50%) translateX(-50%) rotate(40deg) translateX(-20%)}
+            25% { transform:translateY(-50%) translateX(-50%) skew(15deg,15deg) rotate(110deg) translateX(-5%)}
+            50% { transform:translateY(-50%) translateX(-50%) rotate(210deg) translateX(-35%)}
+            75% { transform:translateY(-50%) translateX(-50%) skew(-15deg,-15deg) rotate(300deg) translateX(-10%)}
+            to { transform:translateY(-50%) translateX(-50%) rotate(400deg) translateX(-20%)}
+        }
+            
+        @keyframes c3 {
+            0% { transform:translateY(-50%) translateX(-50%) translateX(-15%) translateY(10%)}
+            20% { transform:translateY(-50%) translateX(-50%) translateX(20%) translateY(-30%)}
+            40% { transform:translateY(-50%) translateX(-50%) translateX(-25%) translateY(-15%)}
+            60% { transform:translateY(-50%) translateX(-50%) translateX(30%) translateY(20%)}
+            80% { transform:translateY(-50%) translateX(-50%) translateX(5%) translateY(35%)}
+            to { transform:translateY(-50%) translateX(-50%) translateX(-15%) translateY(10%)}
+        }
+            
+    </style>
+	<meta property="og:image" content="" />
+	<meta property="og:image:width" content="1800" />
+	<meta property="og:image:height" content="942" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body.dark{
+            color: white;
+            background: black;
+        }
+    </style>
+    <script>
+        const isDarkMode = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if(isDarkMode){
+            document.body.classList.add("dark");
+        }
+    </script>
+</head>

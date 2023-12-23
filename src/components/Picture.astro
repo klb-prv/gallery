@@ -1,0 +1,15 @@
+---
+import { Image } from 'astro:assets';
+import def_img from '../thumbnails/default.png'
+interface Props {
+    src: string;
+}
+
+const { src } = Astro.props
+const img = src ? import(src) : def_img;
+
+---
+<div class="w-[450px] h-[250px]	my-4 rounded-lg flex justify-center items-center text-3xl cursor-pointer hover:drop-shadow-2xl hover:border-2 hover:border-white" style="transition: all .1s ease-in-out;" onclick="let urlImg = this.getElementsByTagName('img')[0].src; window.open(urlImg, '_blank');"}>
+<!-- <h2>Picture</h2> -->
+<Image class="w-[445px] h-[245px] rounded-lg" src={img} alt="Picture" format="webp"/>
+</div>
