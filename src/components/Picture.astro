@@ -1,15 +1,23 @@
 ---
+import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
-import def_img from '../img/thumbnails/default.png'
-interface Props {
-    src: string;
-}
+// import def_img from '../img/thumbnails/default.png'
 
-const { src } = Astro.props
-const img = src ? import(src) : def_img;
+interface Props {
+    imgSrc: string,
+    source: string;
+}
+const { imgSrc, source } = Astro.props;
+let images = "";
+if(source == "default"){
+    images = import.meta.glob<{ default: ImageMetadata }>('../thumbnails/*');
+}
+else if(source == "other"){
+    images = import.meta.glob<{ default: ImageMetadata }>('../thumbnails/other/*');
+}
 
 ---
 <div class="w-[450px] h-[250px]	my-4 rounded-lg flex justify-center items-center text-3xl cursor-pointer hover:drop-shadow-2xl hover:border-2 hover:border-white" style="transition: all .1s ease-in-out;" onclick="let urlImg = this.getElementsByTagName('img')[0].src; window.open(urlImg, '_blank');"}>
 <!-- <h2>Picture</h2> -->
-<Image class="w-[445px] h-[245px] rounded-lg" src={img} alt="Picture" format="webp"/>
+    <Image class="w-[445px] h-[245px] rounded-lg" src={images[imgSrc]()} alt="Picture" format="webp"/>
 </div>

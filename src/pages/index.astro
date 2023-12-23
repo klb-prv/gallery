@@ -16,7 +16,7 @@ const images = ["Christmas Countdown.png", "MVList Remake.png", "OneBox1.png", "
     <Header/>
     <div class="pt-[6vh] px-2 mx-auto text-white flex flex-wrap justify-around">
         {images.map((name) => (
-            <Picture src={`../img/thumbnails/${name}`}/>
+            <Picture imgSrc={`../thumbnails/${name}`} source='default'/>
         ))}
     </div>
 </body>
