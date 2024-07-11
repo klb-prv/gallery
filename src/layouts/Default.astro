@@ -16,6 +16,7 @@ const { title_page } = Astro.props;
     <style is:global>
 
         .circles {
+            display: none;
             width: 100%;
             height: 100vh;
             filter: blur(8rem);
@@ -99,11 +100,15 @@ const { title_page } = Astro.props;
 	<meta property="og:image" content="" />
 	<meta property="og:image:width" content="1800" />
 	<meta property="og:image:height" content="942" />
-    <style>
+    <style is:global>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
         body.dark{
             color: white;
             background: black;
+        }
+
+        body.dark .circles{
+            display: block;
         }
     </style>
     <script>

@@ -1,21 +1,71 @@
 ---
-import type { ImageMetadata } from 'astro';
-import { Image } from 'astro:assets';
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import Modal from "./Modal.astro";
 
 interface Props {
-    imgSrc: string,
+    imgSrc: string;
     source: string;
 }
 const { imgSrc, source } = Astro.props;
-let images = "";
-if(source == "default"){
-    images = import.meta.glob<{ default: ImageMetadata }>('../thumbnails/*');
-}
-else if(source == "other"){
-    images = import.meta.glob<{ default: ImageMetadata }>('../thumbnails/other/*');
-}
+const images =
+    source === "default"
+        ? import.meta.glob<{ default: ImageMetadata }>("../thumbnails/*")
+        : import.meta.glob<{ default: ImageMetadata }>("../thumbnails/other/*");
+
+// Function to get the image dynamically
+const getImage = async (path: string) => {
+    const imageModule = await images[path]();
+    return imageModule.default;
+};
+
+// Generate a unique ID for the modal
+const uniqueId = `image-preview-${crypto.randomUUID()}`;
+
+// Preload the image for modal usage
+const selectedImage = await getImage(imgSrc);
 ---
 
-<div class="w-[450px] h-[250px]	my-4 rounded-lg flex justify-center items-center text-3xl cursor-pointer hover:drop-shadow-2xl hover:border-2 hover:border-white" style="transition: all .1s ease-in-out;" onclick="let urlImg = this.getElementsByTagName('img')[0].src; window.open(urlImg, '_blank');"}>
-    <Image class="w-[445px] h-[245px] rounded-lg" src={images[imgSrc]()} alt="Picture" format="webp"/>
+<style>
+    .image-popup {
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        position: fixed;
+        margin-top: -10px;
+        margin-left: -3px;
+        transition: 0.4s all;
+        cursor: pointer;
+        color: white !important;
+    }
+
+    .image-popup:hover {
+        color: red !important;
+    }
+</style>
+
+<Modal id={uniqueId} open="Open modal">
+    <button slot="close" class="image-popup">&#10006; Close</button>
+    <main slot="main">
+        <Image
+            class="rounded-lg"
+            src={selectedImage}
+            alt="Picture"
+            width="1280"
+            format="webp"
+        />
+    </main>
+</Modal>
+<div
+    class="w-[450px] h-[250px] my-4 rounded-lg flex justify-center items-center text-3xl cursor-pointer hover:drop-shadow-2xl hover:border-2 hover:border-white"
+    style="transition: all .1s ease-in-out;"
+    onclick=`document.getElementById('${uniqueId}').showModal()`
+>
+    <Image
+        class="w-[445px] h-[245px] rounded-lg"
+        src={selectedImage}
+        alt="Picture"
+        width="1280"
+        format="webp"
+    />
 </div>
