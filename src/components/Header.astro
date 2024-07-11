@@ -20,7 +20,8 @@ import { Icon } from 'astro-icon'
     </div>
     <script>
         let res = "";
-        if (document.location.hostname === 'klubuntu.eu.org' || document.location.hostname === 'klubuntu.me') {
+        if (document.referrer === 'https://klubuntu.eu.org' || document.referrer === 'http://klubuntu.eu.org' 
+        || document.location.hostname === 'https://klubuntu.me' || document.location.hostname === 'http://klubuntu.me') {
             res = 'Back to Portfolio';
         }
         else{
