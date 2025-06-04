@@ -1,101 +1,28 @@
 ---
-const { id, onPrev, onNext, onClose } = Astro.props;
+const { id } = Astro.props;
 ---
+
+<dialog id={id} class="modal">
+  <slot name="close"></slot>
+  <slot name="main"></slot>
+</dialog>
 
 <style>
   dialog {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 12px;
-    border: none;
-    max-width: 90vw;
-    max-height: 90vh;
-    background: #111;
-    box-shadow: 0 0 20px rgba(0,0,0,0.8);
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    animation: fadeIn 0.3s ease forwards;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
   }
+
+  dialog[open] {
+    display: block;
+  }
+
   dialog::backdrop {
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(4px);
-  }
-  @keyframes fadeIn {
-    from {opacity: 0; transform: translate(-50%, -48%);}
-    to {opacity: 1; transform: translate(-50%, -50%);}
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: flex-end;
-  }
-  button.close-btn {
-    background: transparent;
-    border: none;
-    font-size: 2rem;
-    color: white;
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-  button.close-btn:hover {
-    color: #f87171; /* red-400 */
-  }
-
-  .modal-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  img {
-    max-width: 100%;
-    max-height: 80vh;
-    border-radius: 12px;
-    user-select: none;
-    pointer-events: none;
-  }
-
-  button.nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.5);
-    border: none;
-    color: white;
-    font-size: 2rem;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    user-select: none;
-  }
-  button.nav-btn:hover {
-    background: rgba(255,255,255,0.3);
-  }
-
-  button.nav-prev {
-    left: 10px;
-  }
-  button.nav-next {
-    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
   }
 </style>
-
-<dialog id={id}>
-  <form method="dialog" class="modal-header">
-    <button type="button" class="close-btn" onClick={onClose} aria-label="Close modal">&times;</button>
-  </form>
-
-  <div class="modal-content">
-    <button class="nav-btn nav-prev" onClick={onPrev} aria-label="Previous image">&#8592;</button>
-    <slot name="main" />
-    <button class="nav-btn nav-next" onClick={onNext} aria-label="Next image">&#8594;</button>
-  </div>
-</dialog>
