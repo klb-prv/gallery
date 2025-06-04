@@ -1,11 +1,6 @@
 ---
 import Modal from "./Modal.astro";
-
-// Odbierz dane z props
-const { imgSrc, allImages = [], initialIndex = 0 } = Astro.props;
-
-// Generuj unikalne ID dla modalu
-const uniqueId = `image-preview-${crypto.randomUUID()}`;
+const { imgSrc, allImages = [], initialIndex = 0, uniqueId } = Astro.props;
 ---
 
 <style>
@@ -14,14 +9,13 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
   }
 </style>
 
-<!-- Zaktualizowana wersja div z przekazaniem uniqueId przez atrybut data-* -->
 <div
   id={`trigger-${uniqueId}`}
   class="w-[450px] h-[250px] my-4 rounded-lg flex justify-center items-center text-3xl cursor-pointer hover:drop-shadow-2xl hover:border-2 hover:border-white transition"
   style="transition: all .1s ease-in-out;"
-  data-unique-id={uniqueId}  <!-- Dodajemy uniqueId do atrybutu data-* -->
-  data-all-images={JSON.stringify(allImages)} <!-- Tablica zdjęć w formie JSON -->
-  data-initial-index={initialIndex} <!-- Inicjalny indeks w formie atrybutu -->
+  data-unique-id={uniqueId}
+  data-all-images={JSON.stringify(allImages)}
+  data-initial-index={initialIndex}
 >
   <img
     class="w-[445px] h-[245px] rounded-lg object-cover"
@@ -31,7 +25,6 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
   />
 </div>
 
-<!-- Modal z unikalnym ID -->
 <Modal id={uniqueId}>
   <button slot="close" class="image-popup" type="button" id={`${uniqueId}-close`}>
     ✖ Close
@@ -66,62 +59,55 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
   </main>
 </Modal>
 
-<script>
-  // Poczekaj, aż cała strona się załaduje
-  window.addEventListener('load', function () {
-    // Pobierz uniqueId z atrybutu data-unique-id
-    const uniqueId = document.querySelector("[data-unique-id]").getAttribute("data-unique-id");
-    
-    // Pobierz dane z atrybutów data-* w HTML-u
-    const allImages = JSON.parse(document.querySelector("[data-unique-id]").getAttribute("data-all-images"));
-    let currentIndex = parseInt(document.querySelector("[data-unique-id]").getAttribute("data-initial-index"), 10);
+<script type="module">
+  const trigger = document.getElementById(`trigger-${uniqueId}`);
+  const modal = document.getElementById(uniqueId);
+  const imgEl = document.getElementById(`${uniqueId}-img`);
+  const closeBtn = document.getElementById(`${uniqueId}-close`);
+  const prevBtn = document.getElementById(`${uniqueId}-prev`);
+  const nextBtn = document.getElementById(`${uniqueId}-next`);
 
-    const trigger = document.getElementById(`trigger-${uniqueId}`);
-    const modal = document.getElementById(uniqueId);
-    const imgEl = document.getElementById(`${uniqueId}-img`);
-    const closeBtn = document.getElementById(`${uniqueId}-close`);
-    const prevBtn = document.getElementById(`${uniqueId}-prev`);
-    const nextBtn = document.getElementById(`${uniqueId}-next`);
+  let images = JSON.parse(trigger.getAttribute('data-all-images'));
+  let currentIndex = parseInt(trigger.getAttribute('data-initial-index'));
 
-    function updateImage(index) {
-      if (!allImages || allImages.length === 0) return;
-      if (index < 0) index = allImages.length - 1;
-      if (index >= allImages.length) index = 0;
-      currentIndex = index;
-      imgEl.src = allImages[currentIndex];
+  function updateImage(index) {
+    if (!images || images.length === 0) return;
+    if (index < 0) index = images.length - 1;
+    if (index >= images.length) index = 0;
+    currentIndex = index;
+    imgEl.src = images[currentIndex];
+  }
+
+  if (trigger && modal && imgEl && closeBtn && prevBtn && nextBtn) {
+    // Ensure modal is closed on initial load
+    if (modal.open) {
+      console.warn("Modal was open on page load, closing it.");
+      modal.close();
     }
 
-    if (trigger && modal && imgEl && closeBtn && prevBtn && nextBtn) {
-      // Upewnij się, że modal jest zamknięty przy załadowaniu strony
-      if (modal.open) {
-        console.warn("Modal był otwarty przy załadowaniu strony, zamykam go.");
-        modal.close();
-      }
+    trigger.addEventListener('click', (event) => {
+      console.log("Trigger clicked, opening modal.");
+      modal.showModal();
+      updateImage(currentIndex);
+    });
 
-      trigger.addEventListener('click', function () {
-        console.log("Kliknięto przycisk, otwieram modal.");
-        modal.showModal();
-        updateImage(currentIndex);
-      });
+    closeBtn.addEventListener('click', () => {
+      console.log("Close button clicked.");
+      modal.close();
+    });
 
-      closeBtn.addEventListener('click', function () {
-        console.log("Kliknięto przycisk zamknięcia.");
-        modal.close();
-      });
+    prevBtn.addEventListener('click', () => {
+      console.log("Previous button clicked.");
+      updateImage(currentIndex - 1);
+    });
 
-      prevBtn.addEventListener('click', function () {
-        console.log("Kliknięto przycisk poprzedni.");
-        updateImage(currentIndex - 1);
-      });
-
-      nextBtn.addEventListener('click', function () {
-        console.log("Kliknięto przycisk następny.");
-        updateImage(currentIndex + 1);
-      });
-    } else {
-      console.error("Nie znaleziono jednego lub więcej elementów DOM:", {
-        trigger, modal, imgEl, closeBtn, prevBtn, nextBtn
-      });
-    }
-  });
+    nextBtn.addEventListener('click', () => {
+      console.log("Next button clicked.");
+      updateImage(currentIndex + 1);
+    });
+  } else {
+    console.error("One or more DOM elements not found:", {
+      trigger, modal, imgEl, closeBtn, prevBtn, nextBtn
+    });
+  }
 </script>
