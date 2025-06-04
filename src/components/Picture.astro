@@ -4,7 +4,6 @@ import Modal from "./Modal.astro";
 const { imgSrc, allImages, initialIndex = 0 } = Astro.props;
 
 const uniqueId = `image-preview-${crypto.randomUUID()}`;
-
 let currentIndex = initialIndex;
 ---
 
@@ -60,20 +59,21 @@ let currentIndex = initialIndex;
   </main>
 </Modal>
 
-<script>
+<script lang="ts">
   (() => {
-    const uniqueId = `${uniqueId}`;
-    const images = ${JSON.stringify(allImages)};
-    let currentIndex = ${initialIndex};
+    // Directly using Astro props
+    const uniqueId = `${Astro.props.uniqueId}`;
+    const images = ${JSON.stringify(allImages)}; // Interpolating the allImages array
+    let currentIndex = ${initialIndex};  // Interpolating the initialIndex
 
-    const trigger = document.getElementById(`trigger-${uniqueId}`);
-    const modal = document.getElementById(uniqueId);
-    const imgEl = document.getElementById(`${uniqueId}-img`);
-    const closeBtn = document.getElementById(`${uniqueId}-close`);
-    const prevBtn = document.getElementById(`${uniqueId}-prev`);
-    const nextBtn = document.getElementById(`${uniqueId}-next`);
+    const trigger = document.getElementById(`trigger-${uniqueId}`)!;
+    const modal = document.getElementById(uniqueId)!;
+    const imgEl = document.getElementById(`${uniqueId}-img`)!;
+    const closeBtn = document.getElementById(`${uniqueId}-close`)!;
+    const prevBtn = document.getElementById(`${uniqueId}-prev`)!;
+    const nextBtn = document.getElementById(`${uniqueId}-next`)!;
 
-    function updateImage(index) {
+    function updateImage(index: number) {
       if (index < 0) index = images.length - 1;
       if (index >= images.length) index = 0;
       currentIndex = index;
