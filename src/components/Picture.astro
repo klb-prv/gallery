@@ -18,6 +18,7 @@ let currentIndex = initialIndex;
   id={`trigger-${uniqueId}`}
   class="w-[450px] h-[250px] my-4 rounded-lg flex justify-center items-center text-3xl cursor-pointer hover:drop-shadow-2xl hover:border-2 hover:border-white transition"
   style="transition: all .1s ease-in-out;"
+  onclick={`document.getElementById('${uniqueId}').showModal()`}
 >
   <img
     class="w-[445px] h-[245px] rounded-lg object-cover"
@@ -61,15 +62,16 @@ let currentIndex = initialIndex;
 
 <script>
   (() => {
-    const trigger = document.getElementById(`trigger-${uniqueId}`);
-    const modal = document.getElementById('{uniqueId}');
-    const imgEl = document.getElementById('{uniqueId}-img');
-    const closeBtn = document.getElementById('{uniqueId}-close');
-    const prevBtn = document.getElementById('{uniqueId}-prev');
-    const nextBtn = document.getElementById('{uniqueId}-next');
+    const uniqueId = `${uniqueId}`;
+    const images = ${JSON.stringify(allImages)};
+    let currentIndex = ${initialIndex};
 
-    const images = JSON.parse('{JSON.stringify(allImages)}');
-    let currentIndex = {initialIndex};
+    const trigger = document.getElementById(`trigger-${uniqueId}`);
+    const modal = document.getElementById(uniqueId);
+    const imgEl = document.getElementById(`${uniqueId}-img`);
+    const closeBtn = document.getElementById(`${uniqueId}-close`);
+    const prevBtn = document.getElementById(`${uniqueId}-prev`);
+    const nextBtn = document.getElementById(`${uniqueId}-next`);
 
     function updateImage(index) {
       if (index < 0) index = images.length - 1;
