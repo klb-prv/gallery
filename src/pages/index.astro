@@ -24,8 +24,8 @@ const images = Object.values(imagesModules);
     {images.map((src, index) => (
       <Picture
         imgSrc={src}
-        allImages={JSON.stringify(images)}        <!-- Przekształcamy tablicę na JSON -->
-        initialIndex={index}      <!-- Przesyłamy index -->
+        allImages={JSON.stringify(images)} 
+        initialIndex={index}
       />
     ))}
   </div>
