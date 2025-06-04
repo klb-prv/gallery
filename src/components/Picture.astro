@@ -1,45 +1,27 @@
 ---
 import Modal from "./Modal.astro";
 
-interface Props {
-  imgSrc: string;
-  source: string;
-  allImages: string[]; // tablica ścieżek do obrazków (np. ['img1.webp', 'img2.webp', ...])
-  initialIndex?: number;
-}
-
-const { imgSrc, source, allImages, initialIndex = 0 } = Astro.props;
+const { imgSrc, allImages, initialIndex = 0 } = Astro.props;
 
 const uniqueId = `image-preview-${crypto.randomUUID()}`;
 
 let currentIndex = initialIndex;
-let selectedImage = allImages[currentIndex];
 ---
 
 <style>
-  .image-popup {
-    background: none;
-    border: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    color: white !important;
-  }
-  .image-popup:hover {
-    color: red !important;
-  }
   dialog::backdrop {
     background: rgba(33, 31, 31, 0.6);
   }
 </style>
 
 <div
-  id="image-preview-trigger"
+  id={`trigger-${uniqueId}`}
   class="w-[450px] h-[250px] my-4 rounded-lg flex justify-center items-center text-3xl cursor-pointer hover:drop-shadow-2xl hover:border-2 hover:border-white transition"
   style="transition: all .1s ease-in-out;"
 >
   <img
     class="w-[445px] h-[245px] rounded-lg object-cover"
-    src={selectedImage}
+    src={imgSrc}
     alt="Picture"
     width="1280"
   />
@@ -53,7 +35,7 @@ let selectedImage = allImages[currentIndex];
   <main slot="main" class="flex flex-col items-center justify-center">
     <img
       id={`${uniqueId}-img`}
-      src={selectedImage}
+      src={imgSrc}
       alt="Picture"
       width="1280"
       class="rounded-lg max-w-full max-h-[80vh] object-contain"
@@ -79,14 +61,13 @@ let selectedImage = allImages[currentIndex];
 
 <script>
   (() => {
-    const trigger = document.getElementById('image-preview-trigger');
+    const trigger = document.getElementById(`trigger-${uniqueId}`);
     const modal = document.getElementById('{uniqueId}');
     const imgEl = document.getElementById('{uniqueId}-img');
     const closeBtn = document.getElementById('{uniqueId}-close');
     const prevBtn = document.getElementById('{uniqueId}-prev');
     const nextBtn = document.getElementById('{uniqueId}-next');
 
-    // Zamień JSON.stringify(allImages) na Astro.inject lub statyczną listę, jeśli nie działa
     const images = JSON.parse('{JSON.stringify(allImages)}');
     let currentIndex = {initialIndex};
 
@@ -99,6 +80,7 @@ let selectedImage = allImages[currentIndex];
 
     trigger.addEventListener('click', () => {
       modal.showModal();
+      updateImage(currentIndex);
     });
 
     closeBtn.addEventListener('click', () => {
