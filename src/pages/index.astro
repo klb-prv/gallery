@@ -3,21 +3,41 @@ import Layout from '../layouts/Default.astro';
 import Header from '../components/Header.astro';
 import Picture from '../components/Picture.astro';
 
-const images = ["Christmas Countdown.png", "MVList Remake.png", "OneBox1.png", "OneBox2.png", "OldStore Admin.png", "Klubuntu OS Menu Start.png", "Klubuntu OS Browser.png", "Klubuntu OS Dark Browser.png", "Klubuntu OS Dark File Manager.png", "HomePage Project - Header.png", "HomePage Project - Footer.png"];
+const images = [
+  "Christmas Countdown.png",
+  "MVList Remake.png",
+  "OneBox1.png",
+  "OneBox2.png",
+  "OldStore Admin.png",
+  "Klubuntu OS Menu Start.png",
+  "Klubuntu OS Browser.png",
+  "Klubuntu OS Dark Browser.png",
+  "Klubuntu OS Dark File Manager.png",
+  "HomePage Project - Header.png",
+  "HomePage Project - Footer.png"
+];
+
+const thumbnails = images.map(name => `../thumbnails/${name}`);
 ---
 
-<Layout title_page='UX/UI Design'></Layout>
+<Layout title_page='UX/UI Design' />
+
 <body class="font-inter leading-normal text-gray-800 bg-kinsta-dark-blue bg relative">
-    <div class="circles">
-        <div class="circle c1 bg-kinsta-blur-1"></div>
-        <div class="circle c2 bg-kinsta-blur-2"></div>
-        <div class="circle c3 bg-kinsta-blur-3"></div>
-    </div>
-    <Header/>
-    <div class="pt-[6vh] px-2 mx-auto text-white flex flex-wrap justify-around">
-        {images.map((name) => (
-            <Picture imgSrc={`../thumbnails/${name}`} source='default'/>
-        ))}
-    </div>
+  <div class="circles">
+    <div class="circle c1 bg-kinsta-blur-1"></div>
+    <div class="circle c2 bg-kinsta-blur-2"></div>
+    <div class="circle c3 bg-kinsta-blur-3"></div>
+  </div>
+  <Header/>
+  <div class="pt-[6vh] px-2 mx-auto text-white flex flex-wrap justify-around">
+    {thumbnails.map((src, index) => (
+      <Picture
+        imgSrc={src}
+        source="default"
+        allImages={thumbnails}
+        initialIndex={index}
+      />
+    ))}
+  </div>
 </body>
 </html>
