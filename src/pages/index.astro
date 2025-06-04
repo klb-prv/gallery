@@ -1,5 +1,4 @@
 ---
-// Importuj komponenty
 import Layout from '../layouts/Default.astro';
 import Header from '../components/Header.astro';
 import Picture from '../components/Picture.astro';
@@ -24,7 +23,7 @@ const images = Object.values(imagesModules);
     {images.map((src, index) => (
       <Picture
         imgSrc={src}
-        allImages={JSON.stringify(images)} 
+        allImages={JSON.stringify(images)}
         initialIndex={index}
       />
     ))}
