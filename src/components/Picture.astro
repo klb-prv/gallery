@@ -59,41 +59,40 @@ let currentIndex = initialIndex;
   </main>
 </Modal>
 
-<script lang="ts">
-  (() => {
-    const uniqueId = `${Astro.props.uniqueId}`;
-    const images = JSON.parse(`{{JSON.stringify(allImages)}}`); // Use Astro's templating for JSON encoding
-    let currentIndex = ${initialIndex};  // Interpolating initialIndex
+<script type="module">
+  // Pass the images and initialIndex as JSON from Astro to the client-side JS
+  const images = JSON.parse(`{{JSON.stringify(allImages)}}`); // Pass allImages from Astro
+  let currentIndex = {{initialIndex}}; // Directly pass initialIndex
 
-    const trigger = document.getElementById(`trigger-${uniqueId}`)!;
-    const modal = document.getElementById(uniqueId)!;
-    const imgEl = document.getElementById(`${uniqueId}-img`)!;
-    const closeBtn = document.getElementById(`${uniqueId}-close`)!;
-    const prevBtn = document.getElementById(`${uniqueId}-prev`)!;
-    const nextBtn = document.getElementById(`${uniqueId}-next`)!;
+  const uniqueId = `image-preview-${crypto.randomUUID()}`;
+  const trigger = document.getElementById(`trigger-${uniqueId}`);
+  const modal = document.getElementById(uniqueId);
+  const imgEl = document.getElementById(`${uniqueId}-img`);
+  const closeBtn = document.getElementById(`${uniqueId}-close`);
+  const prevBtn = document.getElementById(`${uniqueId}-prev`);
+  const nextBtn = document.getElementById(`${uniqueId}-next`);
 
-    function updateImage(index: number) {
-      if (index < 0) index = images.length - 1;
-      if (index >= images.length) index = 0;
-      currentIndex = index;
-      imgEl.src = images[currentIndex];
-    }
+  function updateImage(index) {
+    if (index < 0) index = images.length - 1;
+    if (index >= images.length) index = 0;
+    currentIndex = index;
+    imgEl.src = images[currentIndex];
+  }
 
-    trigger.addEventListener('click', () => {
-      modal.showModal();
-      updateImage(currentIndex);
-    });
+  trigger.addEventListener('click', () => {
+    modal.showModal();
+    updateImage(currentIndex);
+  });
 
-    closeBtn.addEventListener('click', () => {
-      modal.close();
-    });
+  closeBtn.addEventListener('click', () => {
+    modal.close();
+  });
 
-    prevBtn.addEventListener('click', () => {
-      updateImage(currentIndex - 1);
-    });
+  prevBtn.addEventListener('click', () => {
+    updateImage(currentIndex - 1);
+  });
 
-    nextBtn.addEventListener('click', () => {
-      updateImage(currentIndex + 1);
-    });
-  })();
+  nextBtn.addEventListener('click', () => {
+    updateImage(currentIndex + 1);
+  });
 </script>
