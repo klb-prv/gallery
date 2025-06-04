@@ -1,5 +1,4 @@
 ---
-// Importuj komponent Modal
 import Modal from "./Modal.astro";
 
 // Odbierz dane z props
@@ -65,6 +64,8 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
 </Modal>
 
 <script>
+// Poczekaj, aż cała strona się załaduje
+window.addEventListener('load', function () {
   // Pobierz elementy DOM
   const trigger = document.getElementById(`trigger-${uniqueId}`);
   const modal = document.getElementById(uniqueId);
@@ -92,37 +93,30 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
       modal.close();
     }
 
-    trigger.addEventListener('click', function() {
+    trigger.addEventListener('click', function () {
       console.log("Kliknięto przycisk, otwieram modal.");
       modal.showModal();
       updateImage(currentIndex);
     });
 
-    closeBtn.addEventListener('click', function() {
+    closeBtn.addEventListener('click', function () {
       console.log("Kliknięto przycisk zamknięcia.");
       modal.close();
     });
 
-    prevBtn.addEventListener('click', function() {
+    prevBtn.addEventListener('click', function () {
       console.log("Kliknięto przycisk poprzedni.");
       updateImage(currentIndex - 1);
     });
 
-    nextBtn.addEventListener('click', function() {
+    nextBtn.addEventListener('click', function () {
       console.log("Kliknięto przycisk następny.");
       updateImage(currentIndex + 1);
-    });
-
-    // Zapobiegaj przypadkowemu otwieraniu modalu przy załadowaniu strony
-    window.addEventListener('load', function() {
-      if (modal.open) {
-        console.warn("Modal otworzył się nieoczekiwanie przy załadowaniu strony, zamykam go.");
-        modal.close();
-      }
     });
   } else {
     console.error("Nie znaleziono jednego lub więcej elementów DOM:", {
       trigger, modal, imgEl, closeBtn, prevBtn, nextBtn
     });
   }
+});
 </script>
