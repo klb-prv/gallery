@@ -61,8 +61,10 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
 </Modal>
 
 <script type="module">
-  const uniqueId = "{{ uniqueId }}";
-  const images = {{ JSON.stringify(allImages) }} || [];
+  // Instead of {{ uniqueId }} and {{ JSON.stringify(allImages) }},
+  // we pass them directly into the script using Astro's state.
+  const uniqueId = `image-preview-${Astro.site?.crypto?.randomUUID()}`;
+  const images = JSON.parse(`{{ JSON.stringify(allImages) }}`);
   let currentIndex = {{ initialIndex }};
 
   const trigger = document.getElementById(`trigger-${uniqueId}`);
