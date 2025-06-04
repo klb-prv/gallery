@@ -61,10 +61,9 @@ let currentIndex = initialIndex;
 
 <script lang="ts">
   (() => {
-    // Directly using Astro props
     const uniqueId = `${Astro.props.uniqueId}`;
-    const images = ${JSON.stringify(allImages)}; // Interpolating the allImages array
-    let currentIndex = ${initialIndex};  // Interpolating the initialIndex
+    const images = JSON.parse(`{{JSON.stringify(allImages)}}`); // Use Astro's templating for JSON encoding
+    let currentIndex = ${initialIndex};  // Interpolating initialIndex
 
     const trigger = document.getElementById(`trigger-${uniqueId}`)!;
     const modal = document.getElementById(uniqueId)!;
