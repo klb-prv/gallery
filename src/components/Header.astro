@@ -2,45 +2,58 @@
 import { Icon } from 'astro-icon'
 ---
 <header class="p-4 bg-white dark:bg-gray-900 shadow-md">
-  <div class="flex justify-between items-center">
+  <div class="flex items-center justify-between sm:justify-between gap-4 sm:gap-0
+              max-sm:justify-center max-sm:space-x-8">
     <!-- Lewy przycisk: Back -->
-    <div class="flex items-center cursor-pointer" id="tag-back">
+    <div class="flex items-center cursor-pointer text-black dark:text-white" id="tag-back">
       <div class="w-10 sm:w-14">
-        <Icon name="fluent:chevron-left-16-filled" />
+        <Icon name="fluent:chevron-left-16-filled" class="text-black dark:text-white" />
       </div>
-      <span class="ml-2 text-sm sm:text-base max-sm:text-gray-500"></span>
+      <span class="ml-2 text-sm sm:text-base max-sm:text-white"></span>
     </div>
 
     <!-- Hamburger menu button -->
-    <button class="block sm:hidden" id="menu-toggle">
+    <button class="block sm:hidden text-black dark:text-white" id="menu-toggle" aria-label="Toggle menu">
       <Icon name="mdi:menu" class="w-8 h-8" />
     </button>
 
     <!-- Przycisk zmiany motywu -->
-    <div class="w-8 sm:w-9 relative top-1 right-1 transition cursor-pointer" onclick="document.body.classList.toggle('dark')">
+    <div class="w-8 sm:w-9 relative top-1 right-1 cursor-pointer text-black dark:text-white transition" 
+         onclick="document.body.classList.toggle('dark')" aria-label="Toggle dark mode">
       <Icon name="fluent:weather-moon-28-filled" />
     </div>
   </div>
 
   <!-- Nawigacja (pełna) -->
   <nav class="hidden sm:flex items-center justify-center mt-4 sm:mt-0">
-    <a href="/" class="border-b-2 border-black sm:mx-3 w-full sm:w-auto text-center leading-10 flex items-center justify-center transition cursor-pointer hover:border-pink-800">
-      <div class="w-6 sm:w-8 mr-2"><Icon name="fluent:globe-24-regular" /></div>
+    <a href="/" class="border-b-2 border-black dark:border-white sm:mx-3 w-full sm:w-auto
+                      text-center leading-10 flex items-center justify-center transition cursor-pointer
+                      hover:border-pink-800 dark:hover:border-pink-500 text-black dark:text-white">
+      <div class="w-6 sm:w-8 mr-2">
+        <Icon name="fluent:globe-24-regular" class="text-black dark:text-white" />
+      </div>
       <p class="text-sm sm:text-base">UI Design</p>
     </a>
-    <a href="/other" class="border-b-2 border-black sm:mx-3 w-full sm:w-auto text-center leading-10 flex items-center justify-center transition cursor-pointer hover:border-emerald-600">
-      <div class="w-6 sm:w-8 mr-2"><Icon name="fluent:image-multiple-28-filled" /></div>
+    <a href="/other" class="border-b-2 border-black dark:border-white sm:mx-3 w-full sm:w-auto
+                        text-center leading-10 flex items-center justify-center transition cursor-pointer
+                        hover:border-emerald-600 dark:hover:border-emerald-400 text-black dark:text-white">
+      <div class="w-6 sm:w-8 mr-2">
+        <Icon name="fluent:image-multiple-28-filled" class="text-black dark:text-white" />
+      </div>
       <p class="text-sm sm:text-base">Other</p>
     </a>
   </nav>
 
   <!-- Mobilne menu -->
-  <div id="mobile-menu" class="sm:hidden hidden flex-col gap-2 mt-3">
-    <a href="/" class="border-b border-gray-300 py-2 px-2 flex items-center hover:bg-pink-100 dark:hover:bg-pink-800">
+  <div id="mobile-menu" class="sm:hidden hidden flex-col gap-2 mt-3
+                             bg-white dark:bg-gray-800 rounded-md p-2 shadow-md">
+    <a href="/" class="border-b border-gray-300 dark:border-gray-600 py-2 px-2 flex items-center
+                      hover:bg-pink-100 dark:hover:bg-pink-800 text-black dark:text-white rounded">
       <Icon name="fluent:globe-24-regular" class="w-5 h-5 mr-2" />
       UI Design
     </a>
-    <a href="/other" class="border-b border-gray-300 py-2 px-2 flex items-center hover:bg-emerald-100 dark:hover:bg-emerald-800">
+    <a href="/other" class="border-b border-gray-300 dark:border-gray-600 py-2 px-2 flex items-center
+                        hover:bg-emerald-100 dark:hover:bg-emerald-800 text-black dark:text-white rounded">
       <Icon name="fluent:image-multiple-28-filled" class="w-5 h-5 mr-2" />
       Other
     </a>
