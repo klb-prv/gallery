@@ -1,35 +1,72 @@
 ---
 import { Icon } from 'astro-icon'
 ---
-<header>
-    <!-- Icons: https://icones.js.org/collection/fluent?s=globe -->
-    <div class="flex justify-between">
-        <div class="flex items-center cursor-pointer" id="tag-back">
-            <div class="w-14"><Icon name="fluent:chevron-left-16-filled" /></div>
-            <span class="max-sm:hidden"></span>
-        </div>
-        <nav class="flex items-center relative md:right-12">
-            <a href="/" class="border-b-2 border-black mx-3 min-w-[150px] text-center leading-10 flex items-center justify-center transition cursor-pointer hover:border-pink-800">
-                <div class="w-8"><Icon name="fluent:globe-24-regular"/></div><p>UI Design</p>
-            </a>
-            <a href="/other" class="border-b-2 border-black mx-3 min-w-[150px] text-center leading-10 flex items-center justify-center transition cursor-pointer hover:border-emerald-600">
-                <div class="w-8"><Icon name="fluent:image-multiple-28-filled"/></div><p>Other</p>
-            </a>
-        </nav>
-        <div class="w-9 relative top-2 right-2 transition cursor-pointer" onclick="document.body.classList.toggle('dark')"><Icon name="fluent:weather-moon-28-filled" /></div>
+<header class="p-4 bg-white dark:bg-gray-900 shadow-md">
+  <div class="flex justify-between items-center">
+    <!-- Lewy przycisk: Back -->
+    <div class="flex items-center cursor-pointer" id="tag-back">
+      <div class="w-10 sm:w-14">
+        <Icon name="fluent:chevron-left-16-filled" />
+      </div>
+      <span class="ml-2 text-sm sm:text-base max-sm:text-gray-500"></span>
     </div>
-    <script>
-        let res = "";
-        if (document.referrer === 'https://klubuntu.eu.org/' || document.referrer === 'http://klubuntu.eu.org/' 
-        || document.location.hostname === 'https://klubuntu.me/' || document.location.hostname === 'http://klubuntu.me/') {
-            res = 'Back to Portfolio';
-        }
-        else{
-            res = "Back to Previous Site"
-        }
-        document.querySelector("#tag-back span").innerText = res;
-        document.querySelector("#tag-back").addEventListener("click", function(){
-            history.back();
-        })
-    </script>
+
+    <!-- Hamburger menu button -->
+    <button class="block sm:hidden" id="menu-toggle">
+      <Icon name="fluent:line-horizontal-3-24-regular" class="w-8 h-8" />
+    </button>
+
+    <!-- Przycisk zmiany motywu -->
+    <div class="w-8 sm:w-9 relative top-1 right-1 transition cursor-pointer" onclick="document.body.classList.toggle('dark')">
+      <Icon name="fluent:weather-moon-28-filled" />
+    </div>
+  </div>
+
+  <!-- Nawigacja (pełna) -->
+  <nav class="hidden sm:flex items-center justify-center mt-4 sm:mt-0">
+    <a href="/" class="border-b-2 border-black sm:mx-3 w-full sm:w-auto text-center leading-10 flex items-center justify-center transition cursor-pointer hover:border-pink-800">
+      <div class="w-6 sm:w-8 mr-2"><Icon name="fluent:globe-24-regular" /></div>
+      <p class="text-sm sm:text-base">UI Design</p>
+    </a>
+    <a href="/other" class="border-b-2 border-black sm:mx-3 w-full sm:w-auto text-center leading-10 flex items-center justify-center transition cursor-pointer hover:border-emerald-600">
+      <div class="w-6 sm:w-8 mr-2"><Icon name="fluent:image-multiple-28-filled" /></div>
+      <p class="text-sm sm:text-base">Other</p>
+    </a>
+  </nav>
+
+  <!-- Mobilne menu -->
+  <div id="mobile-menu" class="sm:hidden hidden flex-col gap-2 mt-3">
+    <a href="/" class="border-b border-gray-300 py-2 px-2 flex items-center hover:bg-pink-100 dark:hover:bg-pink-800">
+      <Icon name="fluent:globe-24-regular" class="w-5 h-5 mr-2" />
+      UI Design
+    </a>
+    <a href="/other" class="border-b border-gray-300 py-2 px-2 flex items-center hover:bg-emerald-100 dark:hover:bg-emerald-800">
+      <Icon name="fluent:image-multiple-28-filled" class="w-5 h-5 mr-2" />
+      Other
+    </a>
+  </div>
+
+  <script>
+    // Dynamic back label
+    let res = "";
+    if (
+      document.referrer === 'https://klubuntu.eu.org/' ||
+      document.referrer === 'http://klubuntu.eu.org/' ||
+      document.location.hostname === 'klubuntu.me'
+    ) {
+      res = 'Back to Portfolio';
+    } else {
+      res = "Back to Previous Site";
+    }
+    document.querySelector("#tag-back span").innerText = res;
+    document.querySelector("#tag-back").addEventListener("click", function () {
+      history.back();
+    });
+
+    // Hamburger menu toggle
+    document.querySelector("#menu-toggle").addEventListener("click", () => {
+      const menu = document.querySelector("#mobile-menu");
+      menu.classList.toggle("hidden");
+    });
+  </script>
 </header>
