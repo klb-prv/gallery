@@ -1,33 +1,32 @@
 ---
+// Importuj komponenty
 import Layout from '../layouts/Default.astro';
 import Header from '../components/Header.astro';
 import Picture from '../components/Picture.astro';
 
-// Glob import all images from src/thumbnails folder
+// Glob importuj wszystkie obrazy z folderu src/thumbnails
 const imagesModules = import.meta.glob('../thumbnails/*.{png,jpg,jpeg,webp}', { eager: true, as: 'url' });
 
-// Convert the object to an array of URLs
+// Przekształć obiekt w tablicę URL-i
 const images = Object.values(imagesModules);
 ---
 
-<Layout title_page='UX/UI Design' />
+<Layout title_page="UX/UI Design" />
 
-<body class="font-inter leading-normal text-gray-800 bg-kinsta-dark-blue bg relative">
+<body class="font-inter leading-normal text-gray-800 bg-kinsta-dark-blue relative">
   <div class="circles">
     <div class="circle c1 bg-kinsta-blur-1"></div>
     <div class="circle c2 bg-kinsta-blur-2"></div>
     <div class="circle c3 bg-kinsta-blur-3"></div>
   </div>
-  <Header/>
+  <Header />
   <div class="pt-[6vh] px-2 mx-auto text-white flex flex-wrap justify-around">
     {images.map((src, index) => (
       <Picture
         imgSrc={src}
-        allImages={images}
-        initialIndex={index}
-        source="default"
+        allImages={JSON.stringify(images)}        <!-- Przekształcamy tablicę na JSON -->
+        initialIndex={index}      <!-- Przesyłamy index -->
       />
     ))}
   </div>
 </body>
-</html>
