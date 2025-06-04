@@ -20,12 +20,16 @@ const images = Object.values(imagesModules);
   </div>
   <Header />
   <div class="pt-[6vh] px-2 mx-auto text-white flex flex-wrap justify-around">
-    {images.map((src, index) => (
-      <Picture
-        imgSrc={src}
-        allImages={JSON.stringify(images)}
-        initialIndex={index}
-      />
-    ))}
+    {images.map((src, index) => {
+      const uniqueId = `image-preview-${Math.random().toString(36).substr(2, 9)}`;  // Generate a random unique ID
+      return (
+        <Picture
+          imgSrc={src}
+          allImages={JSON.stringify(images)}
+          initialIndex={index}
+          uniqueId={uniqueId}  // Pass uniqueId as a prop
+        />
+      );
+    })}
   </div>
 </body>
