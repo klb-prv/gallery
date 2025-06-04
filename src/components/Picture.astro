@@ -3,8 +3,8 @@ import Modal from "./Modal.astro";
 
 const { imgSrc, allImages, initialIndex = 0 } = Astro.props;
 
+// Generate uniqueId once in the Astro context
 const uniqueId = `image-preview-${crypto.randomUUID()}`;
-let currentIndex = initialIndex;
 ---
 
 <style>
@@ -17,7 +17,6 @@ let currentIndex = initialIndex;
   id={`trigger-${uniqueId}`}
   class="w-[450px] h-[250px] my-4 rounded-lg flex justify-center items-center text-3xl cursor-pointer hover:drop-shadow-2xl hover:border-2 hover:border-white transition"
   style="transition: all .1s ease-in-out;"
-  onclick={`document.getElementById('${uniqueId}').showModal()`}
 >
   <img
     class="w-[445px] h-[245px] rounded-lg object-cover"
@@ -29,7 +28,7 @@ let currentIndex = initialIndex;
 
 <Modal id={uniqueId}>
   <button slot="close" class="image-popup" type="button" id={`${uniqueId}-close`}>
-    &#10006; Close
+    ✖ Close
   </button>
 
   <main slot="main" class="flex flex-col items-center justify-center">
@@ -44,14 +43,16 @@ let currentIndex = initialIndex;
       <button
         type="button"
         id={`${uniqueId}-prev`}
-        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={allImages.length <= 1}
       >
         Prev
       </button>
       <button
         type="button"
         id={`${uniqueId}-next`}
-        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={allImages.length <= 1}
       >
         Next
       </button>
@@ -60,11 +61,10 @@ let currentIndex = initialIndex;
 </Modal>
 
 <script type="module">
-  // Pass the images and initialIndex as JSON from Astro to the client-side JS
-  const images = JSON.parse(`{{JSON.stringify(allImages)}}`); // Pass allImages from Astro
-  let currentIndex = {{initialIndex}}; // Directly pass initialIndex
+  const uniqueId = "{{ uniqueId }}"; // Use the Astro-generated uniqueId
+  const images = {{ JSON.stringify(allImages) }}; // Safely pass allImages
+  let currentIndex = {{ initialIndex }}; // Safely pass initialIndex
 
-  const uniqueId = `image-preview-${crypto.randomUUID()}`;
   const trigger = document.getElementById(`trigger-${uniqueId}`);
   const modal = document.getElementById(uniqueId);
   const imgEl = document.getElementById(`${uniqueId}-img`);
@@ -73,26 +73,30 @@ let currentIndex = initialIndex;
   const nextBtn = document.getElementById(`${uniqueId}-next`);
 
   function updateImage(index) {
+    if (!images || images.length === 0) return;
     if (index < 0) index = images.length - 1;
     if (index >= images.length) index = 0;
     currentIndex = index;
     imgEl.src = images[currentIndex];
   }
 
-  trigger.addEventListener('click', () => {
-    modal.showModal();
-    updateImage(currentIndex);
-  });
+  // Add null checks to prevent errors
+  if (trigger && modal && imgEl && closeBtn && prevBtn && nextBtn) {
+    trigger.addEventListener('click', () => {
+      modal.showModal();
+      updateImage(currentIndex);
+    });
 
-  closeBtn.addEventListener('click', () => {
-    modal.close();
-  });
+    closeBtn.addEventListener('click', () => {
+      modal.close();
+    });
 
-  prevBtn.addEventListener('click', () => {
-    updateImage(currentIndex - 1);
-  });
+    prevBtn.addEventListener('click', () => {
+      updateImage(currentIndex - 1);
+    });
 
-  nextBtn.addEventListener('click', () => {
-    updateImage(currentIndex + 1);
-  });
+    nextBtn.addEventListener('click', () => {
+      updateImage(currentIndex + 1);
+    });
+  }
 </script>
