@@ -3,47 +3,29 @@ import Layout from '../layouts/Default.astro';
 import Header from '../components/Header.astro';
 import Picture from '../components/Picture.astro';
 
-// List of images
-const images = [
-  "Banerek_Niko_119.png", 
-  "Miniaturka Niko119 Skywars Live-Seria.png", 
-  "Miniaturka Niko119 Rapy.pl.png", 
-  "Miniaturka Niko119 Rapy.pl 2.png", 
-  "OS-DEV16.png", 
-  "Miniaturka Assembly.png", 
-  "Miniaturka Urodziny Assembly.png", 
-  "Swiateczna1-3LATA-KANALU.png", 
-  "Miniaturka Intranet.png", 
-  "Logowanie Strona.png", 
-  "Live macOS.png", 
-  "Wakacyjny Live.png", 
-  "Instalacja Windows Odwrotnie.png"
-];
+// Glob importuj wszystkie obrazy z folderu src/thumbnails
+const imagesModules = import.meta.glob('../thumbnails/other/*.{png,jpg,jpeg,webp}', { eager: true, as: 'url' });
 
-// Generate a unique ID for each image to be used in modals
-const imageIds = images.map((_, index) => `image-preview-${index}`);
+// Przekształć obiekt w tablicę URL-i
+const images = Object.values(imagesModules);
 ---
 
 <Layout title_page='Other Pictures'></Layout>
 
 <body class="font-inter leading-normal text-gray-800 bg-kinsta-dark-blue relative">
-    <div class="circles">
-        <div class="circle c1 bg-kinsta-blur-1"></div>
-        <div class="circle c2 bg-kinsta-blur-2"></div>
-        <div class="circle c3 bg-kinsta-blur-3"></div>
-    </div>
-
-    <Header />
-
-    <div class="pt-[6vh] px-2 mx-auto text-white flex flex-wrap justify-around">
-        {images.map((name, index) => (
-            <Picture
-                imgSrc={`../thumbnails/other/${name}`}
-                source="other"
-                uniqueId={imageIds[index]}  // Pass the unique ID for modal
-                allImages={JSON.stringify(images.map(img => `../thumbnails/other/${img}`))}  // Pass all image URLs as JSON
-                initialIndex={index}  // Initial image index
-            />
-        ))}
-    </div>
+  <div class="circles">
+    <div class="circle c1 bg-kinsta-blur-1"></div>
+    <div class="circle c2 bg-kinsta-blur-2"></div>
+    <div class="circle c3 bg-kinsta-blur-3"></div>
+  </div>
+  <Header />
+  <div class="pt-[6vh] px-2 mx-auto text-white flex flex-wrap justify-around">
+    {images.map((src, index) => (
+      <Picture
+        imgSrc={src}
+        allImages={JSON.stringify(images)}
+        initialIndex={index}
+      />
+    ))}
+  </div>
 </body>
