@@ -7,7 +7,8 @@ interface Props {
   source: string;
   allImages: string[]; // lista ścieżek do zdjęć
 }
-const { imgSrc, source, allImages } = Astro.props;
+const { imgSrc, source } = Astro.props;
+const allImages: string[] = Astro.props.allImages ?? [imgSrc]; // DOMYŚLNA TABLICA
 
 const images =
   source === "default"
@@ -23,6 +24,7 @@ const getImage = async (path: string) => {
 };
 
 let selectedImage = await getImage(allImages[currentIndex]);
+
 
 // Helper do aktualizacji indexu i zdjęcia w modalu
 const updateImage = async (newIndex: number) => {
