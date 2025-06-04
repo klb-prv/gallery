@@ -1,81 +1,116 @@
 ---
-import { Image } from "astro:assets";
 import Modal from "./Modal.astro";
 
 interface Props {
   imgSrc: string;
   source: string;
-  allImages: string[]; // lista ścieżek do zdjęć
+  allImages: string[]; // tablica ścieżek do obrazków (np. ['img1.webp', 'img2.webp', ...])
+  initialIndex?: number;
 }
-const { imgSrc, source } = Astro.props;
-const allImages: string[] = Astro.props.allImages ?? [imgSrc]; // DOMYŚLNA TABLICA
 
-const images =
-  source === "default"
-    ? import.meta.glob<{ default: any }>("../thumbnails/*")
-    : import.meta.glob<{ default: any }>("../thumbnails/other/*");
-
-let currentIndex = allImages.indexOf(imgSrc);
-if (currentIndex === -1) currentIndex = 0;
-
-const getImage = async (path: string) => {
-  const imageModule = await images[path]();
-  return imageModule.default;
-};
-
-let selectedImage = await getImage(allImages[currentIndex]);
-
-
-// Helper do aktualizacji indexu i zdjęcia w modalu
-const updateImage = async (newIndex: number) => {
-  if (newIndex < 0) newIndex = allImages.length - 1;
-  if (newIndex >= allImages.length) newIndex = 0;
-  currentIndex = newIndex;
-  selectedImage = await getImage(allImages[currentIndex]);
-  const modal = document.getElementById(uniqueId);
-  if (modal) {
-    // Znajdź obrazek i podmień src
-    const img = modal.querySelector("img");
-    if (img) {
-      img.src = selectedImage.src;
-    }
-  }
-};
+const { imgSrc, source, allImages, initialIndex = 0 } = Astro.props;
 
 const uniqueId = `image-preview-${crypto.randomUUID()}`;
 
+let currentIndex = initialIndex;
+let selectedImage = allImages[currentIndex];
 ---
 
+<style>
+  .image-popup {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: white !important;
+  }
+  .image-popup:hover {
+    color: red !important;
+  }
+  dialog::backdrop {
+    background: rgba(33, 31, 31, 0.6);
+  }
+</style>
+
 <div
+  id="image-preview-trigger"
   class="w-[450px] h-[250px] my-4 rounded-lg flex justify-center items-center text-3xl cursor-pointer hover:drop-shadow-2xl hover:border-2 hover:border-white transition"
   style="transition: all .1s ease-in-out;"
-  onclick={`document.getElementById('${uniqueId}').showModal()`}
 >
-  <Image
-    class="w-[445px] h-[245px] rounded-lg"
+  <img
+    class="w-[445px] h-[245px] rounded-lg object-cover"
     src={selectedImage}
     alt="Picture"
     width="1280"
-    format="webp"
   />
 </div>
 
-<Modal
-  id={uniqueId}
-  onClose={() => document.getElementById(uniqueId).close()}
-  onPrev={() => {
-    updateImage(currentIndex - 1);
-  }}
-  onNext={() => {
-    updateImage(currentIndex + 1);
-  }}
->
-  <Image
-    slot="main"
-    class="rounded-lg"
-    src={selectedImage}
-    alt="Picture"
-    width="1280"
-    format="webp"
-  />
+<Modal id={uniqueId}>
+  <button slot="close" class="image-popup" type="button" id={`${uniqueId}-close`}>
+    &#10006; Close
+  </button>
+
+  <main slot="main" class="flex flex-col items-center justify-center">
+    <img
+      id={`${uniqueId}-img`}
+      src={selectedImage}
+      alt="Picture"
+      width="1280"
+      class="rounded-lg max-w-full max-h-[80vh] object-contain"
+    />
+    <div class="flex gap-4 mt-4">
+      <button
+        type="button"
+        id={`${uniqueId}-prev`}
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+      >
+        Prev
+      </button>
+      <button
+        type="button"
+        id={`${uniqueId}-next`}
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+      >
+        Next
+      </button>
+    </div>
+  </main>
 </Modal>
+
+<script>
+  (() => {
+    const trigger = document.getElementById('image-preview-trigger');
+    const modal = document.getElementById('{uniqueId}');
+    const imgEl = document.getElementById('{uniqueId}-img');
+    const closeBtn = document.getElementById('{uniqueId}-close');
+    const prevBtn = document.getElementById('{uniqueId}-prev');
+    const nextBtn = document.getElementById('{uniqueId}-next');
+
+    // Zamień JSON.stringify(allImages) na Astro.inject lub statyczną listę, jeśli nie działa
+    const images = JSON.parse('{JSON.stringify(allImages)}');
+    let currentIndex = {initialIndex};
+
+    function updateImage(index) {
+      if (index < 0) index = images.length - 1;
+      if (index >= images.length) index = 0;
+      currentIndex = index;
+      imgEl.src = images[currentIndex];
+    }
+
+    trigger.addEventListener('click', () => {
+      modal.showModal();
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.close();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      updateImage(currentIndex - 1);
+    });
+
+    nextBtn.addEventListener('click', () => {
+      updateImage(currentIndex + 1);
+    });
+  })();
+</script>
