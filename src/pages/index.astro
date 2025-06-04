@@ -3,21 +3,11 @@ import Layout from '../layouts/Default.astro';
 import Header from '../components/Header.astro';
 import Picture from '../components/Picture.astro';
 
-const images = [
-  "Christmas Countdown.png",
-  "MVList Remake.png",
-  "OneBox1.png",
-  "OneBox2.png",
-  "OldStore Admin.png",
-  "Klubuntu OS Menu Start.png",
-  "Klubuntu OS Browser.png",
-  "Klubuntu OS Dark Browser.png",
-  "Klubuntu OS Dark File Manager.png",
-  "HomePage Project - Header.png",
-  "HomePage Project - Footer.png"
-];
+// Glob import all images from src/thumbnails folder
+const imagesModules = import.meta.glob('../thumbnails/*.{png,jpg,jpeg,webp}', { eager: true, as: 'url' });
 
-const thumbnails = images.map(name => `../thumbnails/${name}`);
+// Convert the object to an array of URLs
+const images = Object.values(imagesModules);
 ---
 
 <Layout title_page='UX/UI Design' />
@@ -30,12 +20,12 @@ const thumbnails = images.map(name => `../thumbnails/${name}`);
   </div>
   <Header/>
   <div class="pt-[6vh] px-2 mx-auto text-white flex flex-wrap justify-around">
-    {thumbnails.map((src, index) => (
+    {images.map((src, index) => (
       <Picture
         imgSrc={src}
-        source="default"
-        allImages={thumbnails}
+        allImages={images}
         initialIndex={index}
+        source="default"
       />
     ))}
   </div>
