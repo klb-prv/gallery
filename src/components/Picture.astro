@@ -1,10 +1,10 @@
 ---
 import Modal from "./Modal.astro";
 
-const { imgSrc, allImages = [], initialIndex = 0 } = Astro.props;
+const { imgSrc, allImages, initialIndex = 0 } = Astro.props;
 
-// Generate uniqueId once in the Astro context
 const uniqueId = `image-preview-${crypto.randomUUID()}`;
+let currentIndex = initialIndex;
 ---
 
 <style>
@@ -17,6 +17,7 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
   id={`trigger-${uniqueId}`}
   class="w-[450px] h-[250px] my-4 rounded-lg flex justify-center items-center text-3xl cursor-pointer hover:drop-shadow-2xl hover:border-2 hover:border-white transition"
   style="transition: all .1s ease-in-out;"
+  onclick={`document.getElementById('${uniqueId}').showModal()`}
 >
   <img
     class="w-[445px] h-[245px] rounded-lg object-cover"
@@ -28,7 +29,7 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
 
 <Modal id={uniqueId}>
   <button slot="close" class="image-popup" type="button" id={`${uniqueId}-close`}>
-    ✖ Close
+    &#10006; Close
   </button>
 
   <main slot="main" class="flex flex-col items-center justify-center">
@@ -43,16 +44,14 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
       <button
         type="button"
         id={`${uniqueId}-prev`}
-        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
-        disabled={allImages?.length <= 1}
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
       >
         Prev
       </button>
       <button
         type="button"
         id={`${uniqueId}-next`}
-        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
-        disabled={allImages?.length <= 1}
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
       >
         Next
       </button>
@@ -61,15 +60,11 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
 </Modal>
 
 <script type="module">
-  // Directly injecting Astro props into the JavaScript.
-  const uniqueId = `image-preview-${Astro.site?.crypto?.randomUUID()}`;
-  
-  // Injecting the allImages as a JS array directly into the script.
-  const images = {{ JSON.stringify(allImages) }};
-  
-  // Injecting the initialIndex directly.
-  let currentIndex = {{ initialIndex }};
-  
+  // Data passed from Astro as global JavaScript variables
+  const allImages = {{ JSON.stringify(allImages) }}; // Directly inject array
+  let currentIndex = {{ initialIndex }}; // Directly inject index
+
+  const uniqueId = `image-preview-${crypto.randomUUID()}`;
   const trigger = document.getElementById(`trigger-${uniqueId}`);
   const modal = document.getElementById(uniqueId);
   const imgEl = document.getElementById(`${uniqueId}-img`);
@@ -78,51 +73,26 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
   const nextBtn = document.getElementById(`${uniqueId}-next`);
 
   function updateImage(index) {
-    if (!images || images.length === 0) return;
-    if (index < 0) index = images.length - 1;
-    if (index >= images.length) index = 0;
+    if (index < 0) index = allImages.length - 1;
+    if (index >= allImages.length) index = 0;
     currentIndex = index;
-    imgEl.src = images[currentIndex];
+    imgEl.src = allImages[currentIndex];
   }
 
-  if (trigger && modal && imgEl && closeBtn && prevBtn && nextBtn) {
-    // Ensure modal is closed on initial load
-    if (modal.open) {
-      console.warn("Modal was open on page load, closing it.");
-      modal.close();
-    }
+  trigger.addEventListener('click', () => {
+    modal.showModal();
+    updateImage(currentIndex);
+  });
 
-    trigger.addEventListener('click', (event) => {
-      console.log("Trigger clicked, opening modal.");
-      modal.showModal();
-      updateImage(currentIndex);
-    });
+  closeBtn.addEventListener('click', () => {
+    modal.close();
+  });
 
-    closeBtn.addEventListener('click', () => {
-      console.log("Close button clicked.");
-      modal.close();
-    });
+  prevBtn.addEventListener('click', () => {
+    updateImage(currentIndex - 1);
+  });
 
-    prevBtn.addEventListener('click', () => {
-      console.log("Previous button clicked.");
-      updateImage(currentIndex - 1);
-    });
-
-    nextBtn.addEventListener('click', () => {
-      console.log("Next button clicked.");
-      updateImage(currentIndex + 1);
-    });
-
-    // Prevent accidental modal opening on page load
-    window.addEventListener('load', () => {
-      if (modal.open) {
-        console.warn("Modal opened unexpectedly on page load, closing it.");
-        modal.close();
-      }
-    });
-  } else {
-    console.error("One or more DOM elements not found:", {
-      trigger, modal, imgEl, closeBtn, prevBtn, nextBtn
-    });
-  }
+  nextBtn.addEventListener('click', () => {
+    updateImage(currentIndex + 1);
+  });
 </script>
