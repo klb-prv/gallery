@@ -62,7 +62,7 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
 
 <script type="module">
   const uniqueId = "{{ uniqueId }}";
-  const images = {{ JSON.stringify(allImages) }} || []; // Fallback to empty array
+  const images = {{ JSON.stringify(allImages) }} || [];
   let currentIndex = {{ initialIndex }};
 
   const trigger = document.getElementById(`trigger-${uniqueId}`);
@@ -81,21 +81,43 @@ const uniqueId = `image-preview-${crypto.randomUUID()}`;
   }
 
   if (trigger && modal && imgEl && closeBtn && prevBtn && nextBtn) {
-    trigger.addEventListener('click', () => {
+    // Ensure modal is closed on initial load
+    if (modal.open) {
+      console.warn("Modal was open on page load, closing it.");
+      modal.close();
+    }
+
+    trigger.addEventListener('click', (event) => {
+      console.log("Trigger clicked, opening modal.");
       modal.showModal();
       updateImage(currentIndex);
     });
 
     closeBtn.addEventListener('click', () => {
+      console.log("Close button clicked.");
       modal.close();
     });
 
     prevBtn.addEventListener('click', () => {
+      console.log("Previous button clicked.");
       updateImage(currentIndex - 1);
     });
 
     nextBtn.addEventListener('click', () => {
+      console.log("Next button clicked.");
       updateImage(currentIndex + 1);
+    });
+
+    // Prevent accidental modal opening on page load
+    window.addEventListener('load', () => {
+      if (modal.open) {
+        console.warn("Modal opened unexpectedly on page load, closing it.");
+        modal.close();
+      }
+    });
+  } else {
+    console.error("One or more DOM elements not found:", {
+      trigger, modal, imgEl, closeBtn, prevBtn, nextBtn
     });
   }
 </script>
